@@ -107,6 +107,7 @@ export function MapCanvas({
     const activeId = focusId ?? highlightId;
 
     for (const d of dishes) {
+      if (!Number.isFinite(d.lat) || !Number.isFinite(d.lng)) continue;
       const total = totalClaimsRef.current(d.id);
       const state = variant === "gonow" ? pinState(d, total) : d.id === activeId ? "loud" : "quiet";
       if (filterGoNow && state !== "loud") continue;

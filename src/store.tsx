@@ -64,7 +64,9 @@ export type PlantInput = {
   photo?: string;
 };
 
-const STORAGE_KEY = "icrave:v2";
+// v3: dishes gained lat/lng (real map). Bumping the key drops any state saved
+// by an earlier schema so old data can't crash the new map.
+const STORAGE_KEY = "icrave:v3";
 const uid = () =>
   globalThis.crypto?.randomUUID?.() ?? `id-${Math.random().toString(36).slice(2)}-${Date.now()}`;
 
@@ -121,6 +123,11 @@ function load(): State {
     if (!raw) return seed();
     const parsed = JSON.parse(raw) as State;
     if (!parsed.dishes || !parsed.users) return seed();
+    // every dish must have valid coordinates or the map can't render it
+    const valid = Object.values(parsed.dishes).every(
+      (d) => Number.isFinite(d?.lat) && Number.isFinite(d?.lng),
+    );
+    if (!valid) return seed();
     return parsed;
   } catch {
     return seed();
