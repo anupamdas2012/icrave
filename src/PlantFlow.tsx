@@ -342,6 +342,7 @@ export function PlantDone() {
           dishes={[justPlanted]}
           variant="summon"
           highlightId={justPlanted.id}
+          interactive={false}
           totalClaims={totalClaims}
           onPick={() => {}}
         />

@@ -629,68 +629,81 @@ body {
   margin: 18px 0;
 }
 
-/* ---------- map canvas ---------- */
+/* ---------- Leaflet map ---------- */
 
-.map {
+.leaflet-host {
   position: absolute;
   inset: 0;
-  background: radial-gradient(130% 80% at 50% 0%, #1b1712 0%, #0b0a09 70%);
-  overflow: hidden;
 }
-.map svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+.leaflet-container {
+  background: #0d0b0a;
+  font-family: var(--font-mono);
+  outline: none;
 }
-.pin {
-  position: absolute;
-  transform: translate(-50%, -100%);
+/* warm the neutral dark basemap toward the night-market palette */
+.leaflet-tile {
+  filter: saturate(1.1) brightness(0.92) contrast(1.05) hue-rotate(-6deg);
+}
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}
+
+/* custom dish markers */
+.mk {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
-  z-index: 5;
 }
-.pin .bubble {
+.mk-bubble {
   width: 46px;
   height: 46px;
   border-radius: 50% 50% 50% 4px;
   transform: rotate(45deg);
-  background: radial-gradient(circle at 50% 35%, #211c18, #0f0d0b);
+  background: radial-gradient(circle at 50% 35%, #231d18, #0f0d0b);
   border: 1.5px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 6px 14px -4px rgba(0, 0, 0, 0.8);
 }
-.pin .bubble span {
+.mk-bubble img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
   transform: rotate(-45deg);
-  display: flex;
 }
-.pin.loud .bubble {
+.mk-bubble .mk-emoji {
+  transform: rotate(-45deg);
+  font-size: 20px;
+}
+.mk.loud .mk-bubble,
+.mk.sel .mk-bubble {
   border-color: var(--accent);
   box-shadow:
     0 0 0 4px var(--accent-soft),
     0 0 26px 2px var(--accent-glow);
+}
+.mk.loud .mk-bubble {
   animation: pulse 2s infinite;
 }
-.pin.dimmed {
-  opacity: 0.42;
+.mk.dimmed {
+  opacity: 0.5;
   filter: grayscale(0.7);
 }
-.pin .plabel {
-  margin-top: 6px;
+.mk-label {
+  margin-top: 7px;
   font-family: var(--font-mono);
   font-size: 9.5px;
   font-weight: 600;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.72);
   padding: 3px 7px;
   border-radius: 7px;
   white-space: nowrap;
   color: var(--text);
 }
-.pin.loud .plabel {
+.mk.loud .mk-label {
   color: var(--accent);
 }
 @keyframes pulse {
@@ -706,27 +719,159 @@ body {
       0 0 34px 6px var(--accent-glow);
   }
 }
-.me-dot {
-  position: absolute;
+.me-dot-lf {
   width: 16px;
   height: 16px;
   border-radius: 50%;
   background: #4aa8ff;
   border: 2px solid #fff;
-  transform: translate(-50%, -50%);
   box-shadow: 0 0 0 6px rgba(74, 168, 255, 0.2);
-  z-index: 4;
 }
 
-.map-top {
+/* leaflet controls + attribution, themed */
+.leaflet-control-zoom {
+  border: 1px solid var(--line) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.8) !important;
+}
+.leaflet-control-zoom a {
+  background: var(--card-2) !important;
+  color: var(--text) !important;
+  border-color: var(--line-soft) !important;
+  font-weight: 700;
+}
+.leaflet-control-zoom a:hover {
+  background: var(--card) !important;
+}
+.leaflet-control-attribution {
+  background: rgba(10, 9, 8, 0.7) !important;
+  color: var(--text-faint) !important;
+  font-size: 9px !important;
+  backdrop-filter: blur(3px);
+}
+.leaflet-control-attribution a {
+  color: var(--text-dim) !important;
+}
+
+/* ---------- map search overlay ---------- */
+
+.map-search {
   position: absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
-  padding: 0 16px;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  z-index: 1200;
+}
+.searchrow {
   display: flex;
   gap: 8px;
-  z-index: 10;
+}
+.searchbar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(20, 17, 15, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0 12px;
+  height: 46px;
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.9);
+}
+.searchicon {
+  color: var(--accent);
+  font-size: 18px;
+}
+.searchbar input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+}
+.searchbar input::placeholder {
+  color: var(--text-faint);
+  font-weight: 600;
+}
+.searchclear {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-size: 13px;
+}
+.mapbtn {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  box-shadow: 0 10px 26px -8px var(--accent-glow);
+}
+.searchresults {
+  margin-top: 8px;
+  background: rgba(20, 17, 15, 0.96);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -16px rgba(0, 0, 0, 0.9);
+  max-height: 340px;
+  overflow-y: auto;
+}
+.searchitem {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--line-soft);
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+}
+.searchitem:last-child {
+  border-bottom: none;
+}
+.searchitem:hover {
+  background: var(--card);
+}
+.searchitem-name {
+  font-weight: 800;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.searchempty {
+  padding: 16px;
+  color: var(--text-faint);
+  font-size: 12px;
+  text-align: center;
+}
+.media.thumb.sm {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+}
+.sheetclose {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 11px;
+  cursor: pointer;
 }
 
 /* ---------- bottom sheet ---------- */
@@ -740,7 +885,7 @@ body {
   border-top: 1px solid var(--line);
   border-radius: 26px 26px 0 0;
   padding: 10px 20px 22px;
-  z-index: 20;
+  z-index: 1200;
   box-shadow: 0 -30px 60px -20px rgba(0, 0, 0, 0.8);
 }
 .sheet .grab {

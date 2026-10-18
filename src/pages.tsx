@@ -51,6 +51,8 @@ function trailForDish(trails: Record<string, Trail>, dishId: string): Trail | un
 export function MapPage() {
   const { dishList, totalClaims, hasClaimed, state, me } = useStore();
   const navigate = useNavigate();
+  const [focusId, setFocusId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   const candidates = dishList
     .filter(
@@ -63,7 +65,19 @@ export function MapPage() {
     )
     .sort((a, b) => a.freshHours - b.freshHours);
   const summon = candidates[0] ?? state.dishes.pastry ?? dishList[0];
-  const planter = summon ? state.users[summon.plantedBy] : undefined;
+  const selected = focusId ? state.dishes[focusId] : summon;
+  const planter = selected ? state.users[selected.plantedBy] : undefined;
+
+  const q = query.trim().toLowerCase();
+  const results = q
+    ? dishList
+        .filter((d) =>
+          [d.dish, d.spot, d.area, state.users[d.plantedBy]?.name].some((f) =>
+            f?.toLowerCase().includes(q),
+          ),
+        )
+        .slice(0, 7)
+    : [];
 
   return (
     <div className="mapwrap">
@@ -71,32 +85,94 @@ export function MapPage() {
         dishes={dishList}
         variant="summon"
         highlightId={summon?.id}
+        focusId={focusId ?? undefined}
         totalClaims={totalClaims}
-        onPick={(d) => navigate(`/d/${d.id}`)}
+        onPick={(d) => setFocusId(d.id)}
       />
-      <div className="map-top">
-        <span className="chip on">Dishes near you</span>
-        <span className="chip" onClick={() => navigate("/go")}>
-          ⚡ Go now
-        </span>
+
+      <div className="map-search">
+        <div className="searchrow">
+          <div className="searchbar">
+            <span className="searchicon">⌕</span>
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search dishes, spots, neighborhoods"
+              spellCheck={false}
+            />
+            {query && (
+              <button className="searchclear" onClick={() => setQuery("")} aria-label="Clear">
+                ✕
+              </button>
+            )}
+          </div>
+          <button className="mapbtn" onClick={() => navigate("/go")} title="Go now">
+            ⚡
+          </button>
+        </div>
+
+        {q && (
+          <div className="searchresults">
+            {results.length === 0 ? (
+              <div className="searchempty mono">No dishes match “{query}”.</div>
+            ) : (
+              results.map((d) => (
+                <button
+                  key={d.id}
+                  className="searchitem"
+                  onClick={() => {
+                    setFocusId(d.id);
+                    setQuery("");
+                  }}
+                >
+                  <div className="media thumb sm">
+                    <DishImg dish={d} size={34} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div className="searchitem-name">{d.dish}</div>
+                    <div className="mono faint" style={{ fontSize: 11 }}>
+                      {d.spot} · {d.area}
+                    </div>
+                  </div>
+                  <span className="mono faint" style={{ fontSize: 11 }}>
+                    {d.distanceKm} km
+                  </span>
+                </button>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
-      {summon && planter ? (
+      {selected && planter ? (
         <Sheet>
-          <div className="kicker">Summoned</div>
-          <div className="display display-md" style={{ marginTop: 8 }}>
-            {planter.name} pinned a dish
-            <br />
-            {summon.distanceKm} km away
+          <div className="spread">
+            <div className="kicker">{focusId ? "On the map" : "Summoned"}</div>
+            {focusId && (
+              <button className="sheetclose mono" onClick={() => setFocusId(null)}>
+                Summon ↺
+              </button>
+            )}
           </div>
-          <div className="linkcard" onClick={() => navigate(`/d/${summon.id}`)}>
+          <div className="display display-md" style={{ marginTop: 8 }}>
+            {focusId ? (
+              selected.dish
+            ) : (
+              <>
+                {planter.name} pinned a dish
+                <br />
+                {selected.distanceKm} km away
+              </>
+            )}
+          </div>
+          <div className="linkcard" onClick={() => navigate(`/d/${selected.id}`)}>
             <div className="media thumb">
-              <DishImg dish={summon} size={46} />
+              <DishImg dish={selected} size={46} />
             </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 800, fontSize: 16 }}>{summon.dish}</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 800, fontSize: 16 }}>{selected.dish}</div>
               <div className="mono faint" style={{ fontSize: 12, marginTop: 3 }}>
-                {planter.name} · {summon.spot} · {summon.distanceKm} km
+                {planter.name} · {selected.spot} · {selected.area}
               </div>
             </div>
             <span className="faint" style={{ fontSize: 22 }}>
@@ -106,20 +182,17 @@ export function MapPage() {
           <button
             className="btn primary"
             style={{ marginTop: 12 }}
-            onClick={() => navigate(`/d/${summon.id}`)}
+            onClick={() => navigate(`/d/${selected.id}`)}
           >
             See the pin
           </button>
         </Sheet>
       ) : (
         <Sheet>
-          <div className="kicker">All caught up</div>
+          <div className="kicker">Nothing nearby</div>
           <div className="display display-md" style={{ marginTop: 8 }}>
-            Nothing new near you
+            Plant the next one
           </div>
-          <p className="dim" style={{ marginTop: 8, fontSize: 14 }}>
-            You've claimed what's fresh around here. Plant one and summon someone else.
-          </p>
           <button
             className="btn primary"
             style={{ marginTop: 12 }}

@@ -3,7 +3,7 @@ import { type Dish } from "./data";
 
 const KNOWN_ICONS = new Set(["pastry", "noodles", "taco", "gelato", "dumpling"]);
 
-function iconSrc(dish?: Dish, iconId?: string): string | undefined {
+export function dishIconSrc(dish?: Dish, iconId?: string): string | undefined {
   if (dish?.photo) return dish.photo;
   const key = iconId ?? dish?.iconId ?? dish?.id;
   if (key && KNOWN_ICONS.has(key)) return `${import.meta.env.BASE_URL}food-icons/${key}.png`;
@@ -23,7 +23,7 @@ export function DishImg({
   size?: number;
   className?: string;
 }) {
-  const src = iconSrc(dish, iconId);
+  const src = dishIconSrc(dish, iconId);
   if (!src) {
     return (
       <span

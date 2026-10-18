@@ -165,12 +165,13 @@ function reducer(state: State, action: Action): State {
         headsUp: input.headsUp,
         claims: 0,
         emoji: "📍",
+        area: CITY.area,
         iconId: input.iconId,
         photo: input.photo,
         custom: true,
-        // drop it near "you" with a little scatter
-        x: Math.min(88, Math.max(12, CITY.me.x + (Math.random() * 20 - 10))),
-        y: Math.min(80, Math.max(16, CITY.me.y - 10 + (Math.random() * 16 - 8))),
+        // drop it near "you" with a little scatter (~a few blocks)
+        lat: CITY.me.lat + (Math.random() - 0.5) * 0.006,
+        lng: CITY.me.lng + (Math.random() - 0.5) * 0.006,
       };
       return {
         ...state,

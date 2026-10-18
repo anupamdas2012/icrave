@@ -17,6 +17,7 @@ import {
   TrailsPage,
 } from "./pages";
 import { PlantCapture, PlantDone, PlantLayout, PlantStart, PlantVouch } from "./PlantFlow";
+import "leaflet/dist/leaflet.css";
 import "./styles.css";
 
 createRoot(document.getElementById("root")!).render(
