@@ -1,3 +1,4 @@
+import { DishImg } from "./components";
 import { DISHES, pinState, type Dish } from "./data";
 
 type Variant = "summon" | "gonow";
@@ -54,7 +55,9 @@ export function MapCanvas({
             onClick={() => onPick(d)}
           >
             <span className="bubble">
-              <span>{d.emoji}</span>
+              <span>
+                <DishImg id={d.id} size={26} />
+              </span>
             </span>
             {showLabel && (
               <span className="plabel">

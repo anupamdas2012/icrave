@@ -1,6 +1,28 @@
 import { type ReactNode } from "react";
 import { useNav, type Screen } from "./nav";
 
+// Photoreal dish icon (generated with the grubmaps icon generator, transparent
+// PNG) served from /public/food-icons/<id>.png.
+export function DishImg({
+  id,
+  size = 40,
+  className,
+}: {
+  id: string;
+  size?: number;
+  className?: string;
+}) {
+  return (
+    <img
+      src={`${import.meta.env.BASE_URL}food-icons/${id}.png`}
+      alt=""
+      className={className}
+      draggable={false}
+      style={{ width: size, height: size, objectFit: "contain", display: "block" }}
+    />
+  );
+}
+
 export function StatusBar({ dark = false }: { dark?: boolean }) {
   return (
     <div

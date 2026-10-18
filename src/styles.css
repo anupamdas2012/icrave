@@ -529,11 +529,11 @@ body {
   z-index: 5;
 }
 .pin .bubble {
-  width: 40px;
-  height: 40px;
+  width: 46px;
+  height: 46px;
   border-radius: 50% 50% 50% 4px;
   transform: rotate(45deg);
-  background: var(--card-2);
+  background: radial-gradient(circle at 50% 35%, #211c18, #0f0d0b);
   border: 1.5px solid var(--line);
   display: flex;
   align-items: center;
@@ -541,10 +541,9 @@ body {
 }
 .pin .bubble span {
   transform: rotate(-45deg);
-  font-size: 18px;
+  display: flex;
 }
 .pin.loud .bubble {
-  background: var(--accent);
   border-color: var(--accent);
   box-shadow:
     0 0 0 4px var(--accent-soft),
@@ -552,11 +551,8 @@ body {
   animation: pulse 2s infinite;
 }
 .pin.dimmed {
-  opacity: 0.4;
-  filter: grayscale(0.6);
-}
-.pin.quiet .bubble {
-  background: var(--card-2);
+  opacity: 0.42;
+  filter: grayscale(0.7);
 }
 .pin .plabel {
   margin-top: 6px;

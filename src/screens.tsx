@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StatusBar, Rating, Sheet } from "./components";
+import { StatusBar, Rating, Sheet, DishImg } from "./components";
 import { MapCanvas } from "./MapCanvas";
 import { useNav } from "./nav";
 import { DISHES, TRAILS, USERS, SUMMONED_PIN, goNowFacts, isGoNow, type Dish } from "./data";
@@ -52,7 +52,7 @@ export function MapScreen() {
             onClick={() => go("dish", pin.id)}
           >
             <div className="media" style={{ width: 58, height: 58, flex: "0 0 auto" }}>
-              <span style={{ fontSize: 30 }}>{pin.emoji}</span>
+              <DishImg id={pin.id} size={46} />
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 800, fontSize: 16 }}>{pin.dish}</div>
@@ -88,7 +88,7 @@ export function DishPinScreen() {
       <div className="view">
         <div className="pad">
           <div className="media" style={{ height: 230 }}>
-            <span className="big-emoji">{d.emoji}</span>
+            <DishImg id={d.id} size={170} />
             <span className="media-tag">▶ 10-sec clip</span>
             <div className="play-badge">▶</div>
           </div>
@@ -198,7 +198,7 @@ export function ClaimCardScreen() {
           <div className="claimcard">
             <div className="photo">
               <span className="claimed-tag">CLAIMED</span>
-              <span className="big-emoji">{d.emoji}</span>
+              <DishImg id={d.id} size={210} />
             </div>
             <div className="body">
               <div className="mono faint" style={{ fontSize: 11, letterSpacing: "0.1em" }}>
@@ -307,7 +307,7 @@ export function TrailScreen() {
                       )}
                     </div>
                   </div>
-                  <span className="faint">{dish.emoji}</span>
+                  <DishImg id={dish.id} size={34} />
                 </div>
               );
             })}
@@ -442,11 +442,10 @@ export function PlantCaptureScreen() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 120,
-              opacity: 0.5,
+              opacity: 0.55,
             }}
           >
-            🥐
+            <DishImg id="pastry" size={190} />
           </div>
         </div>
 
@@ -532,9 +531,7 @@ export function PlantVouchScreen() {
           <div className="kicker">Vouch for it</div>
 
           <div className="media" style={{ height: 150, marginTop: 12 }}>
-            <span className="big-emoji" style={{ fontSize: 60 }}>
-              🥐
-            </span>
+            <DishImg id="pastry" size={110} />
             <span className="media-tag">✓ Clip ready</span>
           </div>
 
@@ -766,7 +763,7 @@ export function GoNowPinScreen() {
       <div className="view">
         <div className="pad">
           <div className="media" style={{ height: 180 }}>
-            <span className="big-emoji">{d.emoji}</span>
+            <DishImg id={d.id} size={140} />
             <span className="media-tag">⚡ Go now</span>
           </div>
 
@@ -837,9 +834,7 @@ export function ClaimsScreen() {
           >
             <div className="photo" style={{ height: 180 }}>
               <span className="claimed-tag">CLAIMED</span>
-              <span className="big-emoji" style={{ fontSize: 80 }}>
-                {claimed.emoji}
-              </span>
+              <DishImg id={claimed.id} size={140} />
             </div>
             <div className="body">
               <div className="mono faint" style={{ fontSize: 11 }}>
