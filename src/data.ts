@@ -1,5 +1,15 @@
 // Mock data for the ICrave prototype. No backend, no auth — just enough to
 // make the three flows feel real when you tap through them.
+//
+// The whole app runs in one simulated place: San Francisco, Hayes Valley.
+// "Your location" is a fixed mock point; claiming simulates arriving on site.
+
+export const CITY = {
+  name: "San Francisco",
+  area: "Hayes Valley",
+  // where "you" are standing on the stylized map (0..100 canvas coords)
+  me: { x: 48, y: 58 },
+};
 
 export type User = {
   id: string;
@@ -28,11 +38,14 @@ export type Dish = {
   adventure: number; // 1..5
   voucher: string;
   headsUp: HeadsUp[];
-  claims: number;
+  claims: number; // baseline claim count (seed data); session claims add on top
   emoji: string;
   // map placement in the stylized canvas, 0..100 percentage
   x: number;
   y: number;
+  iconId?: string; // which /food-icons/<id>.png to show (defaults to id)
+  photo?: string; // data URL for a user-planted pin's own photo
+  custom?: boolean; // planted during this session
 };
 
 export type TrailStop = {
@@ -207,30 +220,30 @@ export const TRAILS: Record<string, Trail> = {
 // The map screen highlights this pin as the summon.
 export const SUMMONED_PIN = "pastry";
 
-// Pin state used by the "Go now" map (N1). Derived here for the mock.
-export function pinState(d: Dish): PinState {
+// Pin state used by the "Go now" map (N1). `total` is base + session claims.
+export function pinState(d: Dish, total: number): PinState {
   if (!d.openNow) return "dimmed";
   const isNear = d.distanceKm <= 0.8;
   const isFresh = d.freshHours <= 24;
-  const isUnclaimed = d.claims === 0;
-  if (isNear && isFresh && isUnclaimed && d.openNow) return "loud";
+  const isUnclaimed = total === 0;
+  if (isNear && isFresh && isUnclaimed) return "loud";
   return "quiet";
 }
 
 // A pin earns "Go now" only when all four facts are true.
-export function goNowFacts(d: Dish) {
+export function goNowFacts(d: Dish, total: number) {
   return {
     fresh: { ok: d.freshHours <= 24, label: `Pinned ${d.pinnedAgo}` },
     open: { ok: d.openNow, label: d.hours },
     near: { ok: d.distanceKm <= 0.8, label: `${d.walkMin} min walk` },
     unclaimed: {
-      ok: d.claims === 0,
-      label: d.claims === 0 ? "Be first to claim" : `${d.claims} claims`,
+      ok: total === 0,
+      label: total === 0 ? "Be first to claim" : `${total} claims`,
     },
   };
 }
 
-export function isGoNow(d: Dish): boolean {
-  const f = goNowFacts(d);
+export function isGoNow(d: Dish, total: number): boolean {
+  const f = goNowFacts(d, total);
   return f.fresh.ok && f.open.ok && f.near.ok && f.unclaimed.ok;
 }

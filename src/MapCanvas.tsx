@@ -1,20 +1,23 @@
 import { DishImg } from "./components";
-import { DISHES, pinState, type Dish } from "./data";
+import { CITY, pinState, type Dish } from "./data";
 
 type Variant = "summon" | "gonow";
 
 export function MapCanvas({
+  dishes,
   variant,
   highlightId,
   filterGoNow = false,
+  totalClaims,
   onPick,
 }: {
+  dishes: Dish[];
   variant: Variant;
   highlightId?: string;
   filterGoNow?: boolean;
+  totalClaims: (dishId: string) => number;
   onPick: (d: Dish) => void;
 }) {
-  const dishes = Object.values(DISHES);
   return (
     <div className="map">
       {/* stylized night-market streets */}
@@ -32,7 +35,6 @@ export function MapCanvas({
           <path d="M20 -20 L60 880" />
           <path d="M360 -20 L330 880" />
         </g>
-        {/* block tints */}
         <g fill="#120f0d" opacity="0.7">
           <rect x="140" y="200" width="110" height="150" rx="6" transform="rotate(4 195 275)" />
           <rect x="30" y="420" width="120" height="120" rx="6" transform="rotate(-3 90 480)" />
@@ -41,10 +43,12 @@ export function MapCanvas({
       </svg>
 
       {/* you-are-here */}
-      <div className="me-dot" style={{ left: "48%", top: "58%" }} />
+      <div className="me-dot" style={{ left: `${CITY.me.x}%`, top: `${CITY.me.y}%` }} />
 
       {dishes.map((d) => {
-        const state = variant === "gonow" ? pinState(d) : d.id === highlightId ? "loud" : "quiet";
+        const total = totalClaims(d.id);
+        const state =
+          variant === "gonow" ? pinState(d, total) : d.id === highlightId ? "loud" : "quiet";
         if (filterGoNow && state !== "loud") return null;
         const showLabel = state === "loud" || d.id === highlightId;
         return (
@@ -56,7 +60,7 @@ export function MapCanvas({
           >
             <span className="bubble">
               <span>
-                <DishImg id={d.id} size={26} />
+                <DishImg dish={d} size={26} />
               </span>
             </span>
             {showLabel && (
