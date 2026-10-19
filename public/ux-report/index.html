@@ -429,6 +429,53 @@
         font-family: var(--mono);
         font-size: 12px;
       }
+      .flow-outline {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 20px;
+      }
+      @media (max-width: 720px) {
+        .flow-outline {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .fo-card {
+        display: block;
+        text-decoration: none;
+        background: var(--card);
+        border: 1px solid var(--line-soft);
+        border-radius: 14px;
+        padding: 14px;
+        color: var(--text);
+        transition:
+          border-color 0.15s,
+          transform 0.08s;
+      }
+      .fo-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+      .fo-card .n {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--accent);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+      .fo-card h4 {
+        font-size: 16px;
+        font-weight: 800;
+        font-stretch: 85%;
+        text-transform: uppercase;
+        margin: 7px 0 5px;
+        line-height: 1.05;
+      }
+      .fo-card p {
+        font-size: 12.5px;
+        color: var(--dim);
+        margin: 0;
+      }
     </style>
   </head>
   <body>
@@ -452,6 +499,38 @@
           >
         </div>
       </header>
+
+      <!-- FLOW OUTLINE -->
+      <section>
+        <div class="kicker">What I walked</div>
+        <h2>The four flows</h2>
+        <p>
+          Four flows, covering all three flows in the brief plus the map. Each one below is described,
+          executed live, screenshotted, and visualized with manim. Jump in:
+        </p>
+        <div class="flow-outline">
+          <a class="fo-card" href="#flow-a">
+            <span class="n">FLOW 1</span>
+            <h4>Summon → Claim → Artifact</h4>
+            <p>A nearby pin pulls you out the door; you log proof.</p>
+          </a>
+          <a class="fo-card" href="#flow-b">
+            <span class="n">FLOW 3</span>
+            <h4>Go Now</h4>
+            <p>Fresh · open · near · unclaimed — four true facts.</p>
+          </a>
+          <a class="fo-card" href="#flow-c">
+            <span class="n">MAP</span>
+            <h4>Search &amp; Explore</h4>
+            <p>Find a craving; roam the whole city.</p>
+          </a>
+          <a class="fo-card" href="#flow-d">
+            <span class="n">FLOW 2</span>
+            <h4>Plant &amp; Close the Loop</h4>
+            <p>Plant a dish; your taste lands for someone.</p>
+          </a>
+        </div>
+      </section>
 
       <!-- SPEC ALIGNMENT -->
       <section>
@@ -675,7 +754,7 @@
       </section>
 
       <!-- FLOW A -->
-      <section class="flow">
+      <section class="flow" id="flow-a">
         <div class="flow-head">
           <span class="flow-num">FLOW 1</span>
           <h2>Summon → Claim → Artifact</h2>
@@ -763,7 +842,7 @@
       </section>
 
       <!-- FLOW B -->
-      <section class="flow">
+      <section class="flow" id="flow-b">
         <div class="flow-head">
           <span class="flow-num">FLOW 3</span>
           <h2>Go Now</h2>
@@ -816,7 +895,7 @@
       </section>
 
       <!-- FLOW C -->
-      <section class="flow">
+      <section class="flow" id="flow-c">
         <div class="flow-head">
           <span class="flow-num">MAP</span>
           <h2>Search &amp; Explore the city</h2>
@@ -880,7 +959,7 @@
       </section>
 
       <!-- FLOW D -->
-      <section class="flow">
+      <section class="flow" id="flow-d">
         <div class="flow-head">
           <span class="flow-num">FLOW 2</span>
           <h2>Plant a pin &amp; close the loop</h2>
