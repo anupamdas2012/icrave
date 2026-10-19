@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ICrave — UX Validation & Critique</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #0b0a09;
+        --ink2: #121010;
+        --card: #1a1613;
+        --card2: #221e1b;
+        --line: #2e2a26;
+        --line-soft: #241f1c;
+        --text: #f4efe6;
+        --dim: #b2a99c;
+        --faint: #7c746a;
+        --accent: #ff5a1f;
+        --accent-soft: rgba(255, 90, 31, 0.14);
+        --ok: #6ee7a8;
+        --warn: #ffd24a;
+        --disp: "Archivo", system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background:
+          radial-gradient(1100px 700px at 15% -10%, #241a12 0%, transparent 55%),
+          radial-gradient(1000px 800px at 110% 0%, #1a1420 0%, transparent 55%), #090807;
+        color: var(--text);
+        font-family: var(--disp);
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        padding: 0 20px 100px;
+      }
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      .mono {
+        font-family: var(--mono);
+      }
+      .kicker {
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      h1.display {
+        font-weight: 900;
+        font-stretch: 75%;
+        text-transform: uppercase;
+        line-height: 0.92;
+        letter-spacing: -0.01em;
+        font-size: clamp(42px, 8vw, 84px);
+        margin: 10px 0 14px;
+      }
+      h2 {
+        font-weight: 900;
+        font-stretch: 80%;
+        text-transform: uppercase;
+        font-size: clamp(26px, 4vw, 38px);
+        line-height: 1;
+        margin: 6px 0;
+      }
+      h3 {
+        font-weight: 800;
+        font-size: 19px;
+        margin: 0 0 6px;
+      }
+      p {
+        color: var(--dim);
+        margin: 0 0 12px;
+        max-width: 68ch;
+      }
+      a {
+        color: var(--accent);
+      }
+      header.hero {
+        padding: 70px 0 30px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .pill {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--dim);
+        background: var(--card);
+        border: 1px solid var(--line-soft);
+        padding: 7px 12px;
+        border-radius: 999px;
+      }
+      .pill b {
+        color: var(--text);
+      }
+      section {
+        padding: 44px 0;
+        border-bottom: 1px solid var(--line-soft);
+      }
+      .lead {
+        color: var(--text);
+        font-size: 18px;
+        max-width: 72ch;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 18px;
+      }
+      @media (max-width: 720px) {
+        .grid2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line-soft);
+        border-radius: 16px;
+        padding: 18px;
+      }
+      .card h3 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      ul.clean {
+        list-style: none;
+        margin: 8px 0 0;
+      }
+      ul.clean li {
+        color: var(--dim);
+        padding: 6px 0 6px 26px;
+        position: relative;
+        font-size: 15px;
+      }
+      ul.clean li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+      .flow {
+        padding-top: 48px;
+      }
+      .flow-head {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .flow-num {
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        padding: 4px 9px;
+        font-weight: 700;
+      }
+      video {
+        width: 100%;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        margin: 20px 0 6px;
+        background: #000;
+        display: block;
+      }
+      .vid-cap {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--faint);
+        text-align: center;
+        margin-bottom: 18px;
+      }
+      .shots {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        padding: 6px 2px 16px;
+        scroll-snap-type: x mandatory;
+      }
+      .shot {
+        flex: 0 0 auto;
+        width: 215px;
+        scroll-snap-align: start;
+      }
+      .shot img {
+        width: 100%;
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        display: block;
+        background: #000;
+      }
+      .shot .cap {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--faint);
+        margin-top: 8px;
+        letter-spacing: 0.04em;
+      }
+      .shot .cap b {
+        color: var(--accent);
+      }
+      .remarks {
+        margin-top: 22px;
+        display: grid;
+        gap: 10px;
+      }
+      .rm {
+        display: flex;
+        gap: 12px;
+        background: var(--card);
+        border: 1px solid var(--line-soft);
+        border-left-width: 3px;
+        border-radius: 12px;
+        padding: 12px 14px;
+      }
+      .rm.ok {
+        border-left-color: var(--ok);
+      }
+      .rm.warn {
+        border-left-color: var(--warn);
+      }
+      .rm.idea {
+        border-left-color: var(--accent);
+      }
+      .rm .tag {
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding-top: 3px;
+        flex: 0 0 64px;
+      }
+      .rm.ok .tag {
+        color: var(--ok);
+      }
+      .rm.warn .tag {
+        color: var(--warn);
+      }
+      .rm.idea .tag {
+        color: var(--accent);
+      }
+      .rm .body {
+        font-size: 14.5px;
+        color: var(--text);
+      }
+      .rm .body span {
+        color: var(--dim);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 18px;
+        font-size: 14px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line-soft);
+        vertical-align: top;
+      }
+      th {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--faint);
+      }
+      td .sev {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 6px;
+      }
+      .sev.high {
+        background: rgba(255, 90, 31, 0.16);
+        color: var(--accent);
+      }
+      .sev.med {
+        background: rgba(255, 210, 74, 0.14);
+        color: var(--warn);
+      }
+      .sev.low {
+        background: #221e1b;
+        color: var(--dim);
+      }
+      .check {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 20px;
+        margin-top: 16px;
+      }
+      @media (max-width: 720px) {
+        .check {
+          grid-template-columns: 1fr;
+        }
+      }
+      .check div {
+        font-size: 14.5px;
+        color: var(--dim);
+        padding-left: 26px;
+        position: relative;
+      }
+      .check div::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--ok);
+        font-weight: 800;
+      }
+      .btn {
+        display: inline-block;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-stretch: 85%;
+        letter-spacing: 0.04em;
+        background: var(--accent);
+        color: #160a04;
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 12px;
+        margin-top: 8px;
+      }
+      footer {
+        padding: 40px 0 0;
+        color: var(--faint);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="hero">
+        <div class="kicker">ICrave v1 · UX validation &amp; critique</div>
+        <h1 class="display">I pretended<br />to be a user.</h1>
+        <p class="lead">
+          I played a first-time ICrave user — standing in Hayes Valley, hungry, and more inclined to
+          trust a friend's vouch than a star rating. I walked four flows end to end, recorded every
+          interaction, screenshotted each screen, and checked it all against the v1 design brief.
+          Below: what the product gets right, where it creates friction, and the highest-leverage
+          fixes.
+        </p>
+        <div class="meta">
+          <span class="pill"><b>Method</b> · live walkthrough, 4 flows, 16 screens</span>
+          <span class="pill"><b>Against</b> · ICrave v1 Design Brief</span>
+          <span class="pill"><b>North star</b> · claims per week</span>
+          <span class="pill"
+            ><b>App</b> · <a href="../">anupamdas2012.github.io/icrave</a></span
+          >
+        </div>
+      </header>
+
+      <!-- SPEC ALIGNMENT -->
+      <section>
+        <div class="kicker">The scorecard</div>
+        <h2>Does it match the brief?</h2>
+        <p>
+          The concept holds up: this reads as a <b>map of dishes, not restaurants</b>, and the whole
+          app bends toward one verb — <b>claim</b>. The five design principles are visible in the UI,
+          and all three brief flows are present and tappable.
+        </p>
+        <div class="check">
+          <div><b>Dish, not venue</b> — every pin is one dish at one spot</div>
+          <div><b>One dish, one claim</b> — single specific vouch per pin</div>
+          <div><b>People plant pins</b> — authored vouches, no scraped menus</div>
+          <div><b>Only true facts</b> — Go-now needs four real conditions</div>
+          <div><b>Appetite, not fear</b> — heads-up is plain, never guilt</div>
+          <div><b>Template does the work</b> — claim cards look editorial</div>
+          <div><b>The loop closes</b> — planter is notified "taste landed"</div>
+          <div><b>North star is visible</b> — Claims shows "1 this week"</div>
+        </div>
+        <p style="margin-top: 18px">
+          The map got the biggest upgrade from the mockup: a real, zoomable San Francisco with 14
+          dishes scattered across neighborhoods and full-text search. It genuinely feels like a
+          surface you explore rather than a static list.
+        </p>
+      </section>
+
+      <!-- FLOW A -->
+      <section class="flow">
+        <div class="flow-head">
+          <span class="flow-num">FLOW 1</span>
+          <h2>Summon → Claim → Artifact</h2>
+        </div>
+        <p class="lead">
+          The core loop. A nearby pin should pull me off the couch; claiming should feel like proof I
+          went.
+        </p>
+        <p>
+          <b>What I did:</b> Opened the app and was immediately summoned — "Gee pinned a dish 0.4 km
+          away." Tapped through to the Sage-Feta Pastry, read Gee's vouch, hit <b>Claim</b>, watched
+          it simulate walking me to LOQUAT, logged the claim, and got a CLAIMED card. It showed up
+          under Claims as "1 this week."
+        </p>
+
+        <video src="vids/flowA.mp4" autoplay loop muted playsinline></video>
+        <div class="vid-cap">Flow 1 visualization — rendered with manim</div>
+
+        <div class="shots">
+          <div class="shot">
+            <img src="shots/a1-summon-map.png" alt="summon map" />
+            <div class="cap"><b>1</b> · Summoned on open</div>
+          </div>
+          <div class="shot">
+            <img src="shots/a2b-dish-actions.png" alt="dish pin" />
+            <div class="cap"><b>2</b> · Dish pin — decide to go</div>
+          </div>
+          <div class="shot">
+            <img src="shots/a3-arriving.png" alt="arriving" />
+            <div class="cap"><b>3</b> · Walking you there</div>
+          </div>
+          <div class="shot">
+            <img src="shots/a4-onsite.png" alt="on site" />
+            <div class="cap"><b>4</b> · On site — log claim</div>
+          </div>
+          <div class="shot">
+            <img src="shots/a5-claimcard.png" alt="claim card" />
+            <div class="cap"><b>5</b> · The artifact</div>
+          </div>
+          <div class="shot">
+            <img src="shots/a6-claims.png" alt="claims" />
+            <div class="cap"><b>6</b> · 1 this week</div>
+          </div>
+        </div>
+
+        <div class="remarks">
+          <div class="rm ok">
+            <div class="tag">Works</div>
+            <div class="body">
+              The summon lands instantly on open — zero taps to the first appetite trigger. The dish
+              pin has everything the brief asks for: 10-sec clip, big dish type, distance, hours,
+              "sells out", Gee's vouch, crave/adventure, "be first to claim". <span>Faithful to Screen 2.</span>
+            </div>
+          </div>
+          <div class="rm ok">
+            <div class="tag">Works</div>
+            <div class="body">
+              Claim gating is honored — you can't claim from the couch. The simulated "walking you to
+              LOQUAT → you're here ✓" is a clean stand-in for geofence without a live layer.
+            </div>
+          </div>
+          <div class="rm warn">
+            <div class="tag">Friction</div>
+            <div class="body">
+              The claim card shows <b>Gee's clip</b> (the croissant), not <b>my</b> photo — because the
+              photo step is optional and I skipped it. <span>The brief's Screen 3 says "your photo." Proof-of-presence is the whole point of the artifact; right now a skipped photo makes my claim look identical to the planter's pin.</span>
+            </div>
+          </div>
+          <div class="rm warn">
+            <div class="tag">Friction</div>
+            <div class="body">
+              The <b>CLAIM</b> button is full-brightness primary even while locked; only a small line
+              below explains the gate. <span>A first-timer may tap expecting instant success. Labeling it "Claim · walk to LOQUAT" sets the expectation before the tap.</span>
+            </div>
+          </div>
+          <div class="rm idea">
+            <div class="tag">Idea</div>
+            <div class="body">
+              Make the photo the hero of the on-site step (big camera button, "your proof"), and let
+              "Share to story" compose from it. That tightens the Aura-style "beautiful proof as
+              identity" mechanic the brief is reaching for.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FLOW B -->
+      <section class="flow">
+        <div class="flow-head">
+          <span class="flow-num">FLOW 3</span>
+          <h2>Go Now</h2>
+        </div>
+        <p class="lead">Show me I can do something right now — without inventing urgency.</p>
+        <p>
+          <b>What I did:</b> Tapped the ⚡ button on the map into the Go-now view. One pin was lit
+          loud; the sheet listed four fact tiles. Committing opened the pin detail: four checked
+          facts, a plain-language heads-up, and "Go now · 6 min walk."
+        </p>
+
+        <video src="vids/flowB.mp4" autoplay loop muted playsinline></video>
+        <div class="vid-cap">Flow 3 visualization — rendered with manim</div>
+
+        <div class="shots">
+          <div class="shot">
+            <img src="shots/b1-gonow-map.png" alt="go now map" />
+            <div class="cap"><b>1</b> · Go-now map + four facts</div>
+          </div>
+          <div class="shot">
+            <img src="shots/b2-gonow-pin.png" alt="go now pin" />
+            <div class="cap"><b>2</b> · Commit — all four true</div>
+          </div>
+        </div>
+
+        <div class="remarks">
+          <div class="rm ok">
+            <div class="tag">Works</div>
+            <div class="body">
+              This is the strongest screen in the app. Fresh / Open / Near / Unclaimed are shown as
+              discrete checked facts, and the heads-up is stated plainly ("Gee says it sells out
+              early… go soon or check back tomorrow at 8"). <span>Exactly the "only true facts / appetite not fear" principle.</span>
+            </div>
+          </div>
+          <div class="rm warn">
+            <div class="tag">Friction</div>
+            <div class="body">
+              The heads-up hardcodes <b>"It's 1:10 PM"</b> while the status bar reads 9:41. <span>For a product whose trust rests on true facts, a visibly inconsistent clock undercuts the message. Derive the time from one mock "now."</span>
+            </div>
+          </div>
+          <div class="rm idea">
+            <div class="tag">Idea</div>
+            <div class="body">
+              Give "Go now" a one-tap outcome: start walking directions, or a soft countdown
+              ("sells out ~50 min"). Right now commit routes to the dish page — fine, but it loses the
+              urgency the screen just built.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FLOW C -->
+      <section class="flow">
+        <div class="flow-head">
+          <span class="flow-num">MAP</span>
+          <h2>Search &amp; Explore the city</h2>
+        </div>
+        <p class="lead">The map is the product. Can I find a specific craving and roam the city?</p>
+        <p>
+          <b>What I did:</b> Searched "dumpling" — two results (Soup Dumpling, Xiao Long Bao) with
+          spot and neighborhood. Picked one; the map flew to Mission Dolores and highlighted the pin.
+          Zoomed out to see all 14 dishes spread across Hayes Valley, the Mission, North Beach, the
+          Marina, Richmond and more.
+        </p>
+
+        <video src="vids/flowC.mp4" autoplay loop muted playsinline></video>
+        <div class="vid-cap">Search &amp; explore visualization — rendered with manim</div>
+
+        <div class="shots">
+          <div class="shot">
+            <img src="shots/c1-search.png" alt="search" />
+            <div class="cap"><b>1</b> · Search by craving</div>
+          </div>
+          <div class="shot">
+            <img src="shots/c2-flyto.png" alt="fly to" />
+            <div class="cap"><b>2</b> · Fly to the pin</div>
+          </div>
+          <div class="shot">
+            <img src="shots/c3-city.png" alt="city" />
+            <div class="cap"><b>3</b> · Zoom out — the whole city</div>
+          </div>
+        </div>
+
+        <div class="remarks">
+          <div class="rm ok">
+            <div class="tag">Works</div>
+            <div class="body">
+              Search spans dish, spot, neighborhood and planter, and selecting a result flies the map
+              there — a genuinely good "map of dishes" moment. Real street labels make the city
+              legible.
+            </div>
+          </div>
+          <div class="rm warn">
+            <div class="tag">Friction</div>
+            <div class="body">
+              At the default zoom the Hayes Valley pins <b>overlap</b> into a blob — hard to tell
+              there are three distinct dishes. <span>Marker clustering (a count badge that expands on zoom) would fix density without hiding anything.</span>
+            </div>
+          </div>
+          <div class="rm warn">
+            <div class="tag">Friction</div>
+            <div class="body">
+              Tapping the empty search bar shows nothing. <span>First-timers don't know what's searchable. Seed it on focus with nearby / go-now dishes, and sort results by distance.</span>
+            </div>
+          </div>
+          <div class="rm idea">
+            <div class="tag">Idea</div>
+            <div class="body">
+              Add a "recenter on me" control and a subtle "N dishes nearby" count, so roaming the city
+              always has a way back to the summon.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FLOW D -->
+      <section class="flow">
+        <div class="flow-head">
+          <span class="flow-num">FLOW 2</span>
+          <h2>Plant a pin &amp; close the loop</h2>
+        </div>
+        <p class="lead">
+          Most people won't plant — but when they do, the "your taste landed" payoff is what brings
+          them back.
+        </p>
+        <p>
+          <b>What I did:</b> Planted "Smoked Brisket Taco" at LOQUAT — picked a dish icon, named it,
+          wrote why to go, dropped the pin (0 claims, "we'll tell you the moment someone claims it").
+          Then I claimed Gee's pastry as myself, switched to viewing as Gee, and found "You claimed
+          your Sage-Feta Pastry — just now" waiting in Gee's activity.
+        </p>
+
+        <video src="vids/flowD.mp4" autoplay loop muted playsinline></video>
+        <div class="vid-cap">Flow 2 + the loop closing — rendered with manim</div>
+
+        <div class="shots">
+          <div class="shot">
+            <img src="shots/d1-plant-start.png" alt="plant start" />
+            <div class="cap"><b>1</b> · One dish. Your name on it.</div>
+          </div>
+          <div class="shot">
+            <img src="shots/d2-vouch.png" alt="vouch" />
+            <div class="cap"><b>2</b> · Vouch for it</div>
+          </div>
+          <div class="shot">
+            <img src="shots/d3-pin-dropped.png" alt="pin dropped" />
+            <div class="cap"><b>3</b> · Pin dropped</div>
+          </div>
+          <div class="shot">
+            <img src="shots/d4-notify.png" alt="notify" />
+            <div class="cap"><b>4</b> · Taste landed (as Gee)</div>
+          </div>
+        </div>
+
+        <div class="remarks">
+          <div class="rm ok">
+            <div class="tag">Works</div>
+            <div class="body">
+              Three-input creation (media, name, one prompt) is low-friction and on-brief, and the new
+              pin really does appear on the map. The loop <b>actually closes</b> — switching personas
+              proves the planter gets notified. That's the retention engine working.
+            </div>
+          </div>
+          <div class="rm warn">
+            <div class="tag">Bug-ish</div>
+            <div class="body">
+              Gee's notification reads <b>"You claimed your Sage-Feta Pastry."</b> From the planter's
+              point of view, "You" is the <i>claimer</i>, not Gee — so it's ambiguous. <span>It should name the claimer ("Das claimed your…"). Minor copy, outsized confusion.</span>
+            </div>
+          </div>
+          <div class="rm warn">
+            <div class="tag">Friction</div>
+            <div class="body">
+              "Add to a trail" after planting is a dead end (a toast). <span>The brief leaves trail-authoring open; until it's decided, hide the button rather than imply a capability.</span>
+            </div>
+          </div>
+          <div class="rm idea">
+            <div class="tag">Idea</div>
+            <div class="body">
+              Make the notify richer: show the claimer's photo and a one-tap "thank them" or "see their
+              claim card." That's the moment that turns a planter into a repeat planter.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FINDINGS -->
+      <section>
+        <div class="kicker">The punch list</div>
+        <h2>Prioritized findings</h2>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 72px">Priority</th>
+              <th>Finding</th>
+              <th style="width: 34%">Recommendation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="sev high">HIGH</span></td>
+              <td>Notification says "You claimed…" from the planter's view — ambiguous actor.</td>
+              <td>Use the claimer's name/handle in notification copy.</td>
+            </tr>
+            <tr>
+              <td><span class="sev high">HIGH</span></td>
+              <td>Claim card falls back to the planter's clip when the user skips their photo.</td>
+              <td>Make on-site photo the hero step; the artifact should be <i>your</i> proof.</td>
+            </tr>
+            <tr>
+              <td><span class="sev med">MED</span></td>
+              <td>Clock inconsistency: heads-up "1:10 PM" vs status bar "9:41".</td>
+              <td>Drive all time copy from one mock "now."</td>
+            </tr>
+            <tr>
+              <td><span class="sev med">MED</span></td>
+              <td>Hayes Valley pins overlap at default zoom.</td>
+              <td>Add marker clustering with an expand-on-zoom count badge.</td>
+            </tr>
+            <tr>
+              <td><span class="sev med">MED</span></td>
+              <td>Locked CLAIM button looks fully enabled.</td>
+              <td>Label it "Claim · walk to [SPOT]"; reserve full-brightness for the unlocked state.</td>
+            </tr>
+            <tr>
+              <td><span class="sev med">MED</span></td>
+              <td>Empty search gives no guidance; results aren't distance-sorted.</td>
+              <td>Seed nearby/go-now on focus; sort by distance.</td>
+            </tr>
+            <tr>
+              <td><span class="sev low">LOW</span></td>
+              <td>"I'm going" sets intent with no payoff or reminder.</td>
+              <td>Either reinforce (map flag / nudge) or drop, per the brief's anti-saves stance.</td>
+            </tr>
+            <tr>
+              <td><span class="sev low">LOW</span></td>
+              <td>"Add to a trail" and the 10-sec clip are stubs.</td>
+              <td>Hide until real; or wire a single curated trail end to end.</td>
+            </tr>
+            <tr>
+              <td><span class="sev low">LOW</span></td>
+              <td>No location-permission beat.</td>
+              <td>Ask at plant/claim (per brief) for an honest first-run moment.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 20px">
+          <b style="color: var(--text)">Bottom line:</b> the loop is tight, legible, and genuinely
+          fun to walk — the summon → claim → artifact → notify chain all fires, and the map now earns
+          its place as the centerpiece. The highest-leverage work is making the <i>claim artifact
+          unmistakably yours</i> (photo + honest actor names), then polishing map density and the
+          small truth-telling details the brand is staked on.
+        </p>
+        <a class="btn" href="../">Open the live app →</a>
+      </section>
+
+      <footer>
+        ICrave v1 — UX validation. Walkthrough recorded live against the running app; flow
+        visualizations rendered with manim. Screenshots at iPhone 16 Pro Max width.
+      </footer>
+    </div>
+  </body>
+</html>
