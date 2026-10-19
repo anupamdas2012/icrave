@@ -330,6 +330,86 @@
         color: var(--ok);
         font-weight: 800;
       }
+      .improve-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 20px;
+        margin: 16px 0 6px;
+      }
+      @media (max-width: 720px) {
+        .improve-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .improve-grid div {
+        font-size: 14.5px;
+        color: var(--dim);
+        padding-left: 26px;
+        position: relative;
+      }
+      .improve-grid div::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+        font-weight: 800;
+      }
+      .improve-grid b {
+        color: var(--text);
+      }
+      .imp-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 22px;
+      }
+      .imp {
+        background: var(--card);
+        border: 1px solid var(--line-soft);
+        border-left: 3px solid var(--accent);
+        border-radius: 14px;
+        padding: 16px 18px;
+      }
+      .imp-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+      .imp-head h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .imp-line {
+        margin: 0 0 8px;
+        font-size: 14.5px;
+        color: var(--dim);
+        max-width: none;
+        line-height: 1.5;
+      }
+      .imp-line:last-child {
+        margin-bottom: 0;
+      }
+      .imp-line b {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-right: 8px;
+      }
+      .imp-line.p b {
+        color: var(--warn);
+      }
+      .imp-line.w b {
+        color: var(--faint);
+      }
+      .imp-line.f b {
+        color: var(--ok);
+      }
+      .imp-line .t {
+        color: var(--text);
+      }
       .btn {
         display: inline-block;
         font-weight: 800;
@@ -397,6 +477,201 @@
           dishes scattered across neighborhoods and full-text search. It genuinely feels like a
           surface you explore rather than a static list.
         </p>
+      </section>
+
+      <!-- ROOM FOR IMPROVEMENT -->
+      <section>
+        <div class="kicker">Where it can get better</div>
+        <h2>Room for improvement</h2>
+        <p>
+          The brief is met in spirit and structure — but a few gaps keep it from feeling finished,
+          and two of them sit right on the behaviors the whole app is staked on: the
+          <b style="color: var(--text)">claim artifact</b> and the <b style="color: var(--text)">notify</b>
+          payoff. At a glance:
+        </p>
+        <div class="improve-grid">
+          <div><b>Make the claim yours</b> — photo-first proof, not the planter's clip</div>
+          <div><b>Name the actor</b> — "Das claimed…", never "You claimed…"</div>
+          <div><b>One honest clock</b> — true facts means a consistent "now"</div>
+          <div><b>Declutter the map</b> — cluster dense pins, add "recenter on me"</div>
+          <div><b>Guide the search</b> — nearby suggestions, nearest-first results</div>
+          <div><b>Set claim expectations</b> — label the gate before the tap</div>
+          <div><b>Finish or hide stubs</b> — trails, the clip, "I'm going"</div>
+          <div><b>Honest first run</b> — ask for location at plant/claim</div>
+        </div>
+
+        <h3 style="margin: 30px 0 4px; font-size: 15px; color: var(--faint); font-family: var(--mono); letter-spacing: 0.12em; text-transform: uppercase;">
+          In detail
+        </h3>
+        <div class="imp-list">
+          <div class="imp">
+            <div class="imp-head">
+              <span class="sev high">HIGH</span>
+              <h3>Make the claim unmistakably yours</h3>
+            </div>
+            <p class="imp-line p">
+              <b>Problem</b
+              ><span class="t"
+                >On the claim card, when you skip the optional on-site photo, the card falls back to
+                the planter's clip (Gee's croissant). Your claim then looks identical to the pin you
+                claimed — there's no visible proof you personally went.</span
+              >
+            </p>
+            <p class="imp-line w">
+              <b>Why it matters</b
+              >Screen 3 of the brief specifies "your photo," and the Aura mechanic it borrows is
+              "beautiful proof as identity." Proof-of-presence is the entire reason the artifact
+              exists, and claims-per-week is the north star — the artifact is the reward that drives
+              it.
+            </p>
+            <p class="imp-line f">
+              <b>Fix</b
+              ><span class="t"
+                >Promote the photo to the hero of the on-site step (big camera CTA, labelled "your
+                proof"), default to capture, and compose "Share to story" from it. Keep skipping
+                possible but visually secondary, and when skipped, mark the card "no photo yet"
+                rather than silently reusing the planter's image.</span
+              >
+            </p>
+          </div>
+
+          <div class="imp">
+            <div class="imp-head">
+              <span class="sev high">HIGH</span>
+              <h3>Name the actor in notifications</h3>
+            </div>
+            <p class="imp-line p">
+              <b>Problem</b
+              ><span class="t"
+                >Viewing as Gee, the activity reads "You claimed your Sage-Feta Pastry." From the
+                planter's point of view, "You" is the <i>claimer</i>, not Gee — so it's ambiguous who
+                actually went.</span
+              >
+            </p>
+            <p class="imp-line w">
+              <b>Why it matters</b
+              >The notify step — "your taste landed" — is the retention engine (geocaching's owner
+              stewardship + logbook). It only works if the planter can see <i>who</i> their taste
+              landed for.
+            </p>
+            <p class="imp-line f">
+              <b>Fix</b
+              ><span class="t"
+                >Render the claimer's display name/handle ("Das claimed your Sage-Feta Pastry"), show
+                their avatar, and add a one-tap "see their claim card" or "thank them."</span
+              >
+            </p>
+          </div>
+
+          <div class="imp">
+            <div class="imp-head">
+              <span class="sev med">MED</span>
+              <h3>Tell time truthfully</h3>
+            </div>
+            <p class="imp-line p">
+              <b>Problem</b
+              ><span class="t"
+                >The Go-now heads-up hardcodes "It's 1:10 PM" while the status bar reads 9:41, and
+                "Open till 3 PM / Opens 5 PM" are static strings unrelated to that clock.</span
+              >
+            </p>
+            <p class="imp-line w">
+              <b>Why it matters</b
+              >"Only show true facts" is the principle the brand is built on — and this is the exact
+              screen built to earn that trust. A visibly inconsistent clock quietly undermines it.
+            </p>
+            <p class="imp-line f">
+              <b>Fix</b
+              ><span class="t"
+                >Drive every time string (heads-up, open/closed, "sells out soon") from one mock
+                "now" so the facts stay internally consistent.</span
+              >
+            </p>
+          </div>
+
+          <div class="imp">
+            <div class="imp-head">
+              <span class="sev med">MED</span>
+              <h3>Declutter the map</h3>
+            </div>
+            <p class="imp-line p">
+              <b>Problem</b
+              ><span class="t"
+                >At the default zoom the Hayes Valley pins (pastry, canelé, gelato) overlap into a
+                single glowing blob — you can't tell there are three distinct dishes a block
+                apart.</span
+              >
+            </p>
+            <p class="imp-line w">
+              <b>Why it matters</b
+              >The map is the product now; pin density directly degrades the core "explore" moment and
+              can hide the freshest nearby pin behind another.
+            </p>
+            <p class="imp-line f">
+              <b>Fix</b
+              ><span class="t"
+                >Add marker clustering (a count badge that spiderfies/expands as you zoom in), a
+                "recenter on me" control, and a subtle "N dishes nearby" count so roaming always has a
+                way home.</span
+              >
+            </p>
+          </div>
+
+          <div class="imp">
+            <div class="imp-head">
+              <span class="sev med">MED</span>
+              <h3>Guide the search &amp; the claim button</h3>
+            </div>
+            <p class="imp-line p">
+              <b>Problem</b
+              ><span class="t"
+                >Tapping the empty search bar shows nothing, and results aren't distance-sorted. On the
+                dish page, the locked CLAIM button is full-brightness primary with only small text
+                explaining the gate.</span
+              >
+            </p>
+            <p class="imp-line w">
+              <b>Why it matters</b
+              >First-timers don't know what's searchable, nearest-first matches real intent, and a
+              bright-but-locked button invites a tap that "fails."
+            </p>
+            <p class="imp-line f">
+              <b>Fix</b
+              ><span class="t"
+                >Seed the search on focus with nearby / go-now dishes, sort results by distance, and
+                label the gated action "Claim · walk to [SPOT]" — reserving the bright state for when
+                it's actually unlocked.</span
+              >
+            </p>
+          </div>
+
+          <div class="imp">
+            <div class="imp-head">
+              <span class="sev low">LOW</span>
+              <h3>Finish or hide the stubs, and make the first run honest</h3>
+            </div>
+            <p class="imp-line p">
+              <b>Problem</b
+              ><span class="t"
+                >"Add to a trail," the "10-sec clip," and "I'm going" currently lead nowhere (toasts /
+                static placeholders), and there's no location-permission moment anywhere.</span
+              >
+            </p>
+            <p class="imp-line w">
+              <b>Why it matters</b
+              >Dead affordances erode trust in a prototype meant to feel real, and the brief explicitly
+              wants location requested only at plant/claim time — a moment that also reads as honest.
+            </p>
+            <p class="imp-line f">
+              <b>Fix</b
+              ><span class="t"
+                >Wire one curated trail end-to-end (or hide the button), make the clip playable or drop
+                the play affordance, give "I'm going" a real payoff (a map flag / a nudge) or remove it
+                per the anti-saves stance, and add a lightweight permission prompt at plant/claim.</span
+              >
+            </p>
+          </div>
+        </div>
       </section>
 
       <!-- FLOW A -->
